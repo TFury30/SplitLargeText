@@ -128,6 +128,3 @@ MIT License — Free to use, modify, and distribute.
 ## 🙋 Support
 
 Feel free to open issues or submit pull requests. Contributions are welcome!
-```
-
----
