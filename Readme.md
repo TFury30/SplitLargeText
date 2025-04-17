@@ -1,121 +1,133 @@
 ---
+# 📂 SplitLargeText
 
-# 📄 SplitLargeText.ps1
-
-A high-performance PowerShell script to **split very large text files** into smaller, manageable chunks — with optional **duplicate line removal**.
+A high-performance script for **splitting very large text files** into smaller chunks — available in **PowerShell** and **Python**. Both versions offer optional **duplicate line removal**, efficient memory handling, and user-friendly progress output.
 
 ---
 
-## ⚙️ Features
+## 🔀 Versions Available
 
-- ✅ Efficient and fast line-by-line processing using `StreamReader` and `StreamWriter`
-- 📂 Automatically splits any large `.txt` file into smaller files based on a given line limit
+| Language     | Platform        | Filename               |
+|--------------|------------------|------------------------|
+| PowerShell   | Windows          | `SplitLargeText.ps1`   |
+| Python       | Cross-platform   | `split_large_text.py`  |
+
+---
+
+## 🚀 Features (Shared)
+
+- ✅ Splits huge text files by a configurable number of lines
 - 🧹 Optional removal of **duplicate lines**
-- 📈 Real-time feedback on progress
-- 📁 Automatically creates the output directory if it doesn't exist
-- 🛠️ Built-in help screen when no parameters are provided
+- 🔄 Real-time progress messages
+- 🗂️ Output files named `<OriginalFileName>_Part1.txt`, `<OriginalFileName>_Part2.txt`, etc.
+- 📁 Auto-creates output folders if they don’t exist
+- 🛡️ Built-in error handling and help
 
 ---
 
-## 📥 Usage
+## 📥 PowerShell Usage (Windows)
+
+### 📜 Script: `SplitLargeText.ps1`
+
+### ⚙️ Parameters
+
+| Parameter             | Type      | Required | Description                                                  |
+|------------------------|-----------|----------|--------------------------------------------------------------|
+| `-input`              | `string`  | ✅ Yes   | Full path to the input `.txt` file                           |
+| `-LPF`                | `int`     | ❌ No    | Lines per file (default is `100000`)                         |
+| `-output`             | `string`  | ✅ Yes   | Output folder path                                           |
+| `-removeDuplicates`   | `switch`  | ❌ No    | If set, removes duplicate lines before splitting             |
+
+### 🧪 Example
 
 ```powershell
-.\SplitLargeText.ps1 -input "C:\Path\to\largeFile.txt" -LPF 10000 -output "C:\Path\to\outputFolder"
+.\SplitLargeText.ps1 -input "C:\data\bigfile.txt" -LPF 50000 -output "C:\data\out"
+```
+
+With duplicate removal:
+
+```powershell
+.\SplitLargeText.ps1 -input "C:\data\bigfile.txt" -LPF 50000 -output "C:\data\out" -removeDuplicates
 ```
 
 ---
 
-## 📌 Parameters
+## 🐍 Python Usage (Linux/macOS/Windows)
 
-| Parameter            | Type     | Required | Description                                                                 |
-|----------------------|----------|----------|-----------------------------------------------------------------------------|
-| `-input`             | `string` | ✅ Yes    | Full path to the input large text file.                                    |
-| `-LPF`               | `int`    | ❌ No     | Lines per file (defaults to `100000` if not provided).                     |
-| `-output`            | `string` | ✅ Yes    | Folder path where split files will be saved. Will be created if missing.  |
-| `-removeDuplicates`  | `switch` | ❌ No     | If set, duplicate lines will be removed during the split.                  |
+### 📜 Script: `split_large_text.py`
+
+### ⚙️ Parameters
+
+| Flag                 | Required | Description                                                              |
+|----------------------|----------|--------------------------------------------------------------------------|
+| `-input`             | ✅ Yes   | Path to the input large text file                                        |
+| `-LPF`               | ❌ No    | Lines per file (default: `100000`)                                       |
+| `-output`            | ✅ Yes   | Directory to save output files                                           |
+| `-removeDuplicates`  | ❌ No    | Optional flag to enable duplicate line removal                           |
+
+### 🧪 Example
+
+```bash
+python3 split_large_text.py -input "/home/user/big.txt" -LPF 10000 -output "/home/user/output"
+```
+
+With duplicate removal:
+
+```bash
+python3 split_large_text.py -input "/home/user/big.txt" -LPF 10000 -output "/home/user/output" -removeDuplicates
+```
 
 ---
 
-## 🧪 Examples
+## 📁 Output Format
 
-Split a file into 10,000-line chunks:
-
-```powershell
-.\SplitLargeText.ps1 -input "C:\data\bigfile.txt" -LPF 10000 -output "C:\data\output"
-```
-
-Split a file and remove duplicate lines:
-
-```powershell
-.\SplitLargeText.ps1 -input "C:\data\bigfile.txt" -LPF 50000 -output "C:\data\output" -removeDuplicates
-```
-
----
-
-## 🗂️ Output
-
-Each chunked file will be saved in the output folder as:
+Split files will be saved as:
 
 ```
 <OriginalFileName>_Part1.txt
 <OriginalFileName>_Part2.txt
-...
-```
-
-For example, splitting `bigfile.txt` creates:
-```
-bigfile_Part1.txt
-bigfile_Part2.txt
-bigfile_Part3.txt
+<OriginalFileName>_Part3.txt
 ...
 ```
 
 ---
 
-## 🔄 What Happens Internally
+## 🔧 Under the Hood
 
-1. The script checks if all required parameters are provided.
-2. If not, it shows a usage/help page and exits.
-3. It validates the input file and creates the output directory if needed.
-4. It opens the input file using a fast streaming reader.
-5. For every line:
-   - Writes it to the current output file.
-   - If `-removeDuplicates` is specified, it uses a `HashSet<string>` to filter.
-   - If the max line limit (`LPF`) is hit, it starts a new output file.
-6. Progress is printed after each split point.
-7. Files are saved with incremental names like `_Part1`, `_Part2`, etc.
-
----
-
-## ✅ Requirements
-
-- PowerShell 5.1 or later (Windows PowerShell or PowerShell Core)
-- Works on Windows, Linux, or macOS (as long as PowerShell is available)
+- Both versions read the input file **line-by-line** for performance.
+- Duplicate removal uses a **HashSet** (PowerShell) or `set()` (Python) for efficient filtering.
+- After every `LPF` lines, a new output file is created.
+- Files are encoded in UTF-8 for compatibility.
 
 ---
 
 ## 🧯 Error Handling
 
-- ❌ If the input file doesn't exist, a red error message is shown and the script exits.
-- 📁 If the output folder doesn't exist, it is created automatically.
-- If any I/O issue occurs (e.g., write permission denied), a descriptive error is printed.
+- Checks if input file exists
+- Creates the output directory if missing
+- Catches and reports I/O or permission errors
+- Displays usage instructions if required parameters are missing
 
 ---
 
-## 🙋 Help Screen
+## 📦 Requirements
 
-If the script is run without required parameters, it displays a friendly help message:
+| Language     | Runtime               |
+|--------------|------------------------|
+| PowerShell   | PowerShell 5.1+ or Core |
+| Python       | Python 3.6+             |
 
-```powershell
-.\SplitLargeText.ps1
+---
+
+## 📜 License
+
+MIT License — Free to use, modify, and distribute.
+
+---
+
+## 🙋 Support
+
+Feel free to open issues or submit pull requests. Contributions are welcome!
 ```
-
----
-
-## 🚀 Performance Tips
-
-- Prefer local SSDs over network shares for best performance.
-- If you don't need duplicate removal, skip `-removeDuplicates` — it's a bit slower.
-- Use larger `-LPF` values for fewer, bigger files (less file I/O overhead).
 
 ---
